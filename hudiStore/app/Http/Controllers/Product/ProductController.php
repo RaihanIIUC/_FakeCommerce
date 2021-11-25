@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductStoreRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -24,8 +25,9 @@ class ProductController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(ProductStoreRequest $request)
     {
+      
         $product = Product::create($request->all());
         return $this->showOne($product);
 
