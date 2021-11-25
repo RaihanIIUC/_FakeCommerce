@@ -95,9 +95,7 @@ class ProductController extends ApiController
      */
     public function destroy(Product $product)
     {
-        if (!$product) {
-            return $this->showMessage('Product not found');
-        }
+
         $product->delete();
 
         return $this->showMessage('Product deleted successfully');
