@@ -11,5 +11,11 @@ class Product extends Model
 
     const AVAILABLE_PRODUCT = 'available';
     const UNAVAILABLE_PRODUCT = 'unavailable';
-    
+
+    protected $fillable = [
+        'name',
+        'description',
+        'image',
+        'status'
+    ];
 }

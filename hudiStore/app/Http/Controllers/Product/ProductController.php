@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductStoreRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends ApiController
 {
@@ -17,7 +19,7 @@ class ProductController extends ApiController
      */
     public function index()
     {
-
+         return response()->json(['data'], 200);
     }
 
     /**
@@ -25,11 +27,8 @@ class ProductController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(ProductStoreRequest $request)
+    public function create(Request $request)
     {
-      
-        $product = Product::create($request->all());
-        return $this->showOne($product);
 
     }
 
@@ -39,9 +38,15 @@ class ProductController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+
+        $product = Product::create($request->all() + [
+            'image' => $request->hasFile('image') ? Storage::disk('public')->put('products', $request->file('image')) : null
+        ]);
+
+        return $this->showOne($product);
+
     }
 
     /**
@@ -73,9 +78,13 @@ class ProductController extends ApiController
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductStoreRequest $request, Product $product)
     {
-        //
+        $product = Product::create($request->all() + [
+            'image' => $request->hasFile('image') ? Storage::disk('public')->put('products', $request->file('image')) : null
+        ]);
+
+        return $this->showOne($product);
     }
 
     /**
@@ -86,6 +95,12 @@ class ProductController extends ApiController
      */
     public function destroy(Product $product)
     {
-        //
+        if (!$product) {
+            return $this->showMessage('Product not found');
+        }
+        $product->delete();
+
+        return $this->showMessage('Product deleted successfully');
+
     }
 }
